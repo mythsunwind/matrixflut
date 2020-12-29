@@ -15,10 +15,22 @@ size = (64, 32)
 # server settings
 host = ''
 port = 1234
-tick = 50 # in ms
 
-def drawImage(matrix, image):
-    matrix.SetImage(image, 0, 0)
+image = Image.new('RGB', size)
+pixels = image.load()
+lastpixels = [[],[]]
+
+def drawImage(matrix):
+    global lastpixels
+    global running
+
+    while(running):
+        #log.info("drawImage")
+        if isDifferent(pixels, lastpixels):
+            lastpixels = getPixels(pixels)
+            image.show()
+            matrix.SetImage(image, 0, 0)
+        time.sleep(0.2)
 
 def saveImage(image):
     image.save("out/out" + str(int(round(time.time() * 1000))) + ".bmp")
@@ -27,14 +39,9 @@ def readlineFromClient(matrix, client, address):
     # set a buffer size ( could be 2048 or 4096 / power of 2 )
     buffersize = 1024
 
-    image = Image.new('RGB', size)
-    pixels = image.load()
-
     try:
-
         readline = client.makefile().readline
 
-        lastupdate = int(round(time.time() * 1000))
 
         while running:
             data = readline(buffersize).strip()
@@ -58,15 +65,34 @@ def readlineFromClient(matrix, client, address):
                         rgb = ImageColor.getcolor("#" + color, "RGB")
                     pixels[int(arguments[1]), int(arguments[2])] = rgb
 
-            if int(round(time.time() * 1000)) > (lastupdate + tick):
-                lastupdate = int(round(time.time() * 1000))
-                #log.info("TICK" + str(lastupdate))
-                image.show()
-                drawImage(matrix, image)
-
     finally:
         client.close()
         log.info('CLIENT Disconnected:' + address[0] + ':' + str(address[1]) + '\n')
+
+def isDifferent(pixels, lastpixels):
+    for x in range(size[0]):
+        for y in range(size[1]):
+            try:
+                lastpixel = lastpixels[x][y]
+                if pixels[x, y] != lastpixel:
+                   return True
+            except IndexError:
+                return True
+    #log.info("Image not different")
+    return False
+
+def getPixels(pixels):
+    array = []
+    for x in range(size[0]):
+        innerarray = []
+        for y in range(size[1]):
+            innerarray.append(1)
+        array.append(innerarray)
+
+    for x in range(size[0]):
+        for y in range(size[1]):
+            array[x][y] = pixels[x, y]
+    return array
 
 if __name__ == '__main__':
     global running
@@ -86,6 +112,7 @@ if __name__ == '__main__':
     font.LoadFont("/home/pi/time/spleen-6x12.bdf")
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     try:
         s.bind((host, port))
@@ -98,6 +125,8 @@ if __name__ == '__main__':
     s.listen(100)
 
     try:
+        Thread(target=drawImage, args=(matrix, )).start()
+
         while(running):
             client, address = s.accept()
             log.info('CLIENT Connected: ' + address[0] + ':' + str(address[1]))
