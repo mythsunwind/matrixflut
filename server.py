@@ -1,5 +1,4 @@
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
-from rgbmatrix import graphics
 import socket
 import sys
 import logging
@@ -25,12 +24,11 @@ def drawImage(matrix):
     global running
 
     while(running):
-        #log.info("drawImage")
+        time.sleep(0.2)
         if isDifferent(pixels, lastpixels):
             lastpixels = getPixels(pixels)
             image.show()
             matrix.SetImage(image, 0, 0)
-        time.sleep(0.2)
 
 def saveImage(image):
     image.save("out/out" + str(int(round(time.time() * 1000))) + ".bmp")
@@ -107,9 +105,6 @@ if __name__ == '__main__':
     options.hardware_mapping = "adafruit-hat"
 
     matrix = RGBMatrix(options = options)
-
-    font = graphics.Font()
-    font.LoadFont("/home/pi/time/spleen-6x12.bdf")
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
