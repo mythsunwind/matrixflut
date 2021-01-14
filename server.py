@@ -49,11 +49,6 @@ def readlineFromClient(matrix, client, address):
             arguments = data.split()
             #log.info("DATA: " + str(arguments))
                 
-            if len(arguments) == 1:
-                if arguments[0] == "SIZE":
-                    client.send("SIZE {} {}\n".format(size[0], size[1]).encode())
-                    break
-
             if len(arguments) == 4:
                 if arguments[0] == "PX":
                     color = arguments[3]
@@ -62,6 +57,10 @@ def readlineFromClient(matrix, client, address):
                     else:
                         rgb = ImageColor.getcolor("#" + color, "RGB")
                     pixels[int(arguments[1]), int(arguments[2])] = rgb
+            else if len(arguments) == 1:
+                if arguments[0] == "SIZE":
+                    client.send("SIZE {} {}\n".format(size[0], size[1]).encode())
+                    break
 
     finally:
         client.close()
