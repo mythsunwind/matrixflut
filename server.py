@@ -59,9 +59,12 @@ def readlineFromClient(matrix, client, address):
                     pixels[int(arguments[1]), int(arguments[2])] = rgb
             elif len(arguments) == 2:
                 if arguments[0] == "BRIGHTNESS":
-                    if type(arguments[1]) == int:
-                        if arguments[1] >= 0 and arguments[1] <= 100:
-                            matrix.brightness = arguments[1]
+                    try:
+                        brightness = int(arguments[1])
+                        if brightness >= 0 and brightness <= 100:
+                            matrix.brightness = brightness
+                    except:
+                        log.error('Brightness value is not a number')
             elif len(arguments) == 1:
                 if arguments[0] == "SIZE":
                     client.send("SIZE {} {}\n".format(size[0], size[1]).encode())
