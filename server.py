@@ -57,6 +57,11 @@ def readlineFromClient(matrix, client, address):
                     else:
                         rgb = ImageColor.getcolor("#" + color, "RGB")
                     pixels[int(arguments[1]), int(arguments[2])] = rgb
+            elif len(arguments) == 2:
+                if arguments[0] == "BRIGHTNESS":
+                    if type(arguments[1]) == int:
+                        if arguments[1] => 0 and arguments[1] <= 100:
+                            matrix.brightness = arguments[1]
             elif len(arguments) == 1:
                 if arguments[0] == "SIZE":
                     client.send("SIZE {} {}\n".format(size[0], size[1]).encode())
