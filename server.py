@@ -1,3 +1,6 @@
+from flask import Flask
+from flask import current_app, request, escape, jsonify, render_template, redirect, url_for
+import threading
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 import socket
 import sys
@@ -11,13 +14,15 @@ log = logging.getLogger('matrixflut')
 # matrix settings
 size = (64, 32)
 
-# server settings
+# pixelflut server settings
 host = ''
 port = 1234
 
 image = Image.new('RGB', size)
 pixels = image.load()
 lastpixels = [[],[]]
+
+app = Flask(__name__)
 
 def drawImage(matrix):
     global lastpixels
@@ -27,7 +32,6 @@ def drawImage(matrix):
         time.sleep(0.2)
         if isDifferent(pixels, lastpixels):
             lastpixels = getPixels(pixels)
-            image.show()
             matrix.SetImage(image, 0, 0)
 
 def saveImage(image):
@@ -99,7 +103,31 @@ def getPixels(pixels):
             array[x][y] = pixels[x, y]
     return array
 
-if __name__ == '__main__':
+@app.route('/')
+def index():
+    return render_template("index.html")
+
+@app.route('/favicon.ico')
+def favicon():
+    return redirect(url_for('static', filename = 'favicon.ico'))
+
+@app.route('/api/size')
+def api_size():
+    return jsonify(size)
+
+@app.route('/api/pixels')
+def api_pixels():
+#    for x in range(size[0]):
+#        for y in range(size[1]):
+#                rgb = pixels[x, y]
+     return jsonify(getPixels(pixels))
+
+def flaskThread():
+    app.run()
+
+if __name__ == "__main__":
+    threading.Thread(target=app.run).start()
+
     global running
     running = True
 
