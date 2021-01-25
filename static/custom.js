@@ -116,7 +116,7 @@ window.onload = function() {
 				item = item.replace('p', '');
 				height = item.split('_')[0];
 				width = item.split('_')[1];
-				px.push("PX " + width + "" + height + " " + hex);
+				px.push("PX " + width + " " + height + " " + hex);
 			}
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', '/api/pixels', true);
