@@ -115,12 +115,15 @@ def favicon():
 def api_size():
     return jsonify(size)
 
-@app.route('/api/pixels')
-def api_pixels():
-#    for x in range(size[0]):
-#        for y in range(size[1]):
-#                rgb = pixels[x, y]
-     return jsonify(getPixels(pixels))
+@app.route('/api/pixels', methods=['GET']))
+def api_pixels_get():
+    return jsonify(getPixels(pixels))
+
+@app.route('/api/pixels', methods=['POST']))
+def api_pixels_set():
+    json = request.get_json()
+    log.info(json)
+    return jsonify(getPixels(pixels))
 
 def flaskThread():
     app.run()
