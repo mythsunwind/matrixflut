@@ -10,6 +10,13 @@ var hoverOverPixel = function() {
 	}
 }
 
+var clickPixel = function() {
+	unsaved.add(this.id);
+        document.querySelector("#unsaved").style.display = "block";
+        const bgcolor = document.querySelector("#colorpicker").value;
+        this.style.setProperty('background-color', bgcolor);
+}
+
 function initTable() {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', '/api/size');
@@ -27,6 +34,7 @@ function initTable() {
 					var td = document.createElement("td");
 					td.setAttribute("id", "p" + i + "_"+ j);
 					td.onmouseover = hoverOverPixel
+					td.onclick = clickPixel
 					// prevent dragging the element
 					td.onmousedown = function() { return false };
 					tr.appendChild(td);
