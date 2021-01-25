@@ -109,22 +109,28 @@ window.onload = function() {
 	});
 	document.querySelector("#save").addEventListener('click', (event) => {
 		if (unsaved.size > 0) {
-			document.querySelector("#unsaved").style.display = "none";
 			px = [];
 			for (item of unsaved) {
 				const bgcolor = document.querySelector("#" + item).style.getPropertyValue("background-color");
 				const hex = rgbToHex(bgcolor);
 				item = item.replace('p', '');
-				item = item.replace('_', ' ');
-				px.push("PX " + item + " " + hex);
+				height = item.split('_')[0];
+				width = item.split('_')[1];
+				px.push("PX " + width + "" + height + " " + hex);
 			}
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', '/api/pixels', true);
 			xhr.setRequestHeader("Content-Type", "application/json");
 
 			xhr.onload = function () {
-				// Request finished. Do processing here.
+				document.querySelector("#unsaved").style.display = "none";
+				unsaved = new Set();
+				updateMatrix();
 			};
+			xhr.onerror = function () {
+				// show error somewhere
+				alert("Error while saving")
+			}
 
 			xhr.send(JSON.stringify(px));
 		}
