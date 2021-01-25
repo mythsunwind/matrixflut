@@ -115,11 +115,11 @@ def favicon():
 def api_size():
     return jsonify(size)
 
-@app.route('/api/pixels', methods=['GET']))
+@app.route('/api/pixels', methods=['GET'])
 def api_pixels_get():
     return jsonify(getPixels(pixels))
 
-@app.route('/api/pixels', methods=['POST']))
+@app.route('/api/pixels', methods=['POST'])
 def api_pixels_set():
     json = request.get_json()
     log.info(json)
