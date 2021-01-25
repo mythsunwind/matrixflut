@@ -108,9 +108,25 @@ window.onload = function() {
 		updateMatrix();
 	});
 	document.querySelector("#save").addEventListener('click', (event) => {
-		document.querySelector("#unsaved").style.display = "none";
-		for(item of unsaved) {
-			alert(item + " " + document.querySelector("#" + item).style.getPropertyValue("background-color"));
+		if (unsaved.size > 0) {
+			document.querySelector("#unsaved").style.display = "none";
+			px = [];
+			for (item of unsaved) {
+				const bgcolor = document.querySelector("#" + item).style.getPropertyValue("background-color");
+				const hex = rgbToHex(bgcolor);
+				item = item.replace('p', '');
+				item = item.replace('_', ' ');
+				px.push("PX " + item + " " + hex);
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', '/api/pixels', true);
+			xhr.setRequestHeader("Content-Type", "application/json");
+
+			xhr.onload = function () {
+				// Request finished. Do processing here.
+			};
+
+			xhr.send(JSON.stringify(px));
 		}
 	});
 

@@ -122,7 +122,13 @@ def api_pixels_get():
 @app.route('/api/pixels', methods=['POST'])
 def api_pixels_set():
     json = request.get_json()
-    log.info(json)
+    for item in json:
+        arguments = item.split()
+        if arguments[0] == "PX":
+            color = arguments[3]
+            if len(color) == 6:
+                rgb = ImageColor.getcolor("#" + color, "RGB")
+                pixels[int(arguments[1]), int(arguments[2])] = rgb
     return jsonify(getPixels(pixels))
 
 def flaskThread():
