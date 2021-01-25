@@ -1,3 +1,14 @@
+let unsaved = new Set();
+let mousedown = false;
+
+var hoverOverPixel = function() {
+	if (mousedown) {
+		unsaved.add(this.id);
+		document.querySelector("#unsaved").style.display = "block";
+		const bgcolor = document.querySelector("#colorpicker").value;
+		this.style.setProperty('background-color', bgcolor);
+	}
+}
 
 function initTable() {
 	var xhr = new XMLHttpRequest();
@@ -15,6 +26,9 @@ function initTable() {
 				for (let j = 0; j < width; j++) {
 					var td = document.createElement("td");
 					td.setAttribute("id", "p" + i + "_"+ j);
+					td.onmouseover = hoverOverPixel
+					// prevent dragging the element
+					td.onmousedown = function() { return false };
 					tr.appendChild(td);
 				}
 				document.querySelector('#matrix').appendChild(tr);
@@ -26,6 +40,8 @@ function initTable() {
 }
 
 function updateMatrix() {
+	document.querySelector("#loading").style.display = "block";
+
 	var xhr = new XMLHttpRequest();
         xhr.open('GET', '/api/pixels');
         xhr.setRequestHeader("Content-Type", "application/json");
@@ -35,13 +51,20 @@ function updateMatrix() {
                 if (xhr.status == 200) {
 			response = xhr.response
 			for (let y = 0; y < response.length; y++) {
-				row = response[y];
+				let row = response[y];
 				for(let x = 0; x < row.length; x++) {
-					rgb = row[x]
-					document.querySelector('#p' + x + '_' + y).setAttribute("style", "background-color: rgb(" + rgb[0] + ',' + rgb[1]+ ',' + rgb[2] + ')');
+					let rgb = row[x]
+					let id = 'p' + x + '_' + y
+					if (!unsaved.has(id)) {
+						document.querySelector('#' + id).setAttribute("style", "background-color: rgb(" + rgb[0] + ',' + rgb[1]+ ',' + rgb[2] + ')');
+					}
 				}
 			}
+			document.querySelector("#loading").style.display = "none";
 		}
+	}
+	xhr.onerror = function() {
+		document.querySelector("#loading").style.display = "none";
 	}
 	xhr.send();
 }
@@ -70,7 +93,7 @@ window.onload = function() {
                 }
 	});
 
-	document.querySelectorAll(".btn").forEach(element => {
+	document.querySelectorAll(".btn-color").forEach(element => {
 		element.addEventListener('click', (event) => {
 			const button = event.target;
 			style = window.getComputedStyle(button);
@@ -79,8 +102,34 @@ window.onload = function() {
 			document.querySelector("#hexcolor").value = rgbToHex(bgcolor);
 		});
 	});
+	document.querySelector("#revert").addEventListener('click', (event) => {
+		document.querySelector("#unsaved").style.display = "none";
+		unsaved = new Set();
+		updateMatrix();
+	});
+	document.querySelector("#save").addEventListener('click', (event) => {
+		document.querySelector("#unsaved").style.display = "none";
+		for(item of unsaved) {
+			alert(item + " " + document.querySelector("#" + item).style.getPropertyValue("background-color"));
+		}
+	});
+
+	// identify if mouse pressed or not
+	document.onmousedown = function() { mousedown = true };
+	document.onmouseup = function() { mousedown = false };
+
+	// show dialog if unsaved changes
+	window.onbeforeunload = function() {
+		if (unsaved.size > 0) {
+			return "There are unsaved changes.";
+		} else {
+			return;
+		}
+	};
+
+	document.querySelector("#unsaved").style.display = "none";
+	document.querySelector("#loading").style.display = "none";
 
 	initTable();
-	// TODO: implement refresh
-	// setInterval("updateMatrix()", 10000);
+	setInterval("updateMatrix()", 10000);
 }

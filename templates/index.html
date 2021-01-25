@@ -16,9 +16,14 @@ td {
 	</head>
 	<body>
 		<div class="container">
-			<div class="row justify-content-md-center">
+			<div class="d-flex justify-content-center">
 				<div class="col col-lg-2">
 					<div class="input-group mb-3">
+						<span class="input-group-text">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eyedropper" viewBox="0 0 16 16">
+  <path d="M13.354.646a1.207 1.207 0 0 0-1.708 0L8.5 3.793l-.646-.647a.5.5 0 1 0-.708.708L8.293 5l-7.147 7.146A.5.5 0 0 0 1 12.5v1.793l-.854.854a.5.5 0 1 0 .708.707L1.707 15H3.5a.5.5 0 0 0 .354-.146L11 7.707l1.146 1.147a.5.5 0 0 0 .708-.708l-.647-.646 3.147-3.146a1.207 1.207 0 0 0 0-1.708l-2-2zM2 12.707l7-7L10.293 7l-7 7H2v-1.293z"/>
+</svg>
+</span>
 					<input type="color" class="form-control" id="colorpicker" name="colorpicker" value="#ff0000">
 					</div>
 				</div>
@@ -29,29 +34,39 @@ td {
 					</div>
 				</div>
 				<div class="col col-lg-6">
-					<button type="button" class="btn" style="background-color: #ffffff">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #ffff00">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #ff6600">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #ff0000">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #ff0099">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #330099">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #0000cc">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #0099ff">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #00aa00">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #006600">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #bbbbbb">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #888888">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #444444">&nbsp;</button>
-					<button type="button" class="btn" style="background-color: #000000">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #ffffff">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #ffff00">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #ff6600">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #ff0000">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #ff0099">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #330099">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #0000cc">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #0099ff">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #00aa00">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #006600">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #bbbbbb">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #888888">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #444444">&nbsp;</button>
+					<button type="button" class="btn btn-color" style="background-color: #000000">&nbsp;</button>
+				</div>
+				<div style="width: 20px">
+					<span id="loading">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+</svg>
+					</span>
 				</div>
 			</div>
-			<div class="row justify-content-md-center">
-				<div class="col">
-					<table id="matrix">
-					</table>
-				</div>
+			<div class="d-flex justify-content-center">
+				<table id="matrix">
+				</table>
+			</div>
+			<div class="d-flex justify-content-end">
+				<span id="unsaved" style="padding: 5px">Unsaved changes</span>
+				<button id="revert" type="button" class="btn btn-secondary">Revert</button>&nbsp;
+				<button id="save" type="button" class="btn btn-primary">Save</button>
 			</div>
 		</div>
-
 	</body>
 </html>
