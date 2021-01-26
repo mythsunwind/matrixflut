@@ -8,6 +8,7 @@ var hoverOverPixel = function() {
 		const bgcolor = document.querySelector("#colorpicker").value;
 		this.style.setProperty('background-color', bgcolor);
 	}
+	document.querySelector("#position").innerText = this.id;
 }
 
 var clickPixel = function() {
